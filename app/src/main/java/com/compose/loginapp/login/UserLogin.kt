@@ -1,5 +1,6 @@
 package com.compose.loginapp.login
 
+import android.content.Context
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.fillMaxSize
@@ -14,8 +15,11 @@ import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -38,9 +42,36 @@ import com.compose.loginapp.ui.widgets.BasicTextField
 import com.jetpack.textfielddemo.ui.widgets.textField.PassWordTextField
 
 @Composable
-fun UserLoginScreen() {
+fun InitLogin(context: Context,viewModel: UserViewModel = androidx.lifecycle.viewmodel.compose.viewModel()){
+    when (val state = viewModel.loginResponseState.collectAsState().value) {
+        is UserViewModel.LoginUiState.Loaded -> {
+            UserLoginScreen(context,viewModel)
+        }
+        is UserViewModel.LoginUiState.Success -> {
+            UserLoginScreen(context,viewModel)
+            Toast.makeText(context,state.message,Toast.LENGTH_LONG).show()
+        }
+        is UserViewModel.LoginUiState.Error -> {
+            UserLoginScreen(context,viewModel)
+            Toast.makeText(context,state.message,Toast.LENGTH_LONG).show()
+        }
+        else -> {
+            UserLoginScreen(context,viewModel)
+        }
+    }
+}
+
+
+@Composable
+fun UserLoginScreen(context:Context,viewModel: UserViewModel) {
     var email  by rememberSaveable { mutableStateOf("") }
     var password    by rememberSaveable { mutableStateOf("") }
+    val isInputValid by remember {
+        derivedStateOf {
+            email.isNotBlank() && password.isNotBlank() && password.length >= 5
+
+        }
+    }
 
     Surface(
         color = Color.LightGray, modifier = Modifier.fillMaxSize()
@@ -85,7 +116,8 @@ fun UserLoginScreen() {
             )
 
             Button(
-                onClick = { },
+                onClick = { viewModel.validateLogin(userEmail = email, userPassword = password) },
+                enabled = isInputValid,
                 modifier = Modifier.layoutId("loginBtn"),
                 colors = ButtonDefaults.buttonColors(backgroundColor = Color.Blue, contentColor = Color.White)
             ) {

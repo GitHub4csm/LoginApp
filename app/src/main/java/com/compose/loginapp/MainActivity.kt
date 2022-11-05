@@ -10,6 +10,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.compose.loginapp.login.InitLogin
 import com.compose.loginapp.login.UserLoginScreen
 import com.compose.loginapp.ui.theme.LoginAppTheme
 
@@ -22,7 +23,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(), color = MaterialTheme.colors.background
                 ) {
                    // Greeting("Android")
-                    UserLoginScreen()
+                    InitLogin(applicationContext)
                 }
             }
         }
@@ -38,6 +39,6 @@ class MainActivity : ComponentActivity() {
 fun DefaultPreview() {
     LoginAppTheme {
         //Greeting("Android")
-         UserLoginScreen()
+      //   UserLoginScreen(applicationContext)
     }
 }
