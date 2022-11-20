@@ -28,6 +28,9 @@ class UserViewModel : ViewModel() {
        }
     }
 
+    fun resetUIState(){
+        _loginResponseState.value = LoginUiState.Loaded
+    }
     sealed class LoginUiState {
         object Loaded : LoginUiState()
         object InProgress : LoginUiState()

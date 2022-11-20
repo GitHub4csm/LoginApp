@@ -31,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.ConstraintSet
+import androidx.lifecycle.ViewModel
 import com.compose.loginapp.R
 import com.compose.loginapp.ui.widgets.BasicTextField
 import com.jetpack.textfielddemo.ui.widgets.textField.PassWordTextField
@@ -44,11 +45,11 @@ fun InitLogin(context: Context,
             UserLoginScreen(context,viewModel)
         }
         is UserViewModel.LoginUiState.Success -> {
-            //UserLoginScreen(context,viewModel)
-            LaunchedEffect(Unit) {
+                viewModel.resetUIState()
+                LaunchedEffect(Unit) {
                 onNavigateToList()
             }
-           // Toast.makeText(context,state.message,Toast.LENGTH_SHORT).show()
+
         }
         is UserViewModel.LoginUiState.Error -> {
             UserLoginScreen(context,viewModel)
@@ -61,8 +62,8 @@ fun InitLogin(context: Context,
 }
 @Composable
 fun UserLoginScreen(context:Context,viewModel: UserViewModel) {
-    var email  by rememberSaveable { mutableStateOf("") }
-    var password    by rememberSaveable { mutableStateOf("") }
+    var email  by remember { mutableStateOf("") }
+    var password    by remember { mutableStateOf("") }
     val isInputValid by remember {
         derivedStateOf {
             email.isNotBlank() && password.isNotBlank() && password.length >= 5
@@ -113,7 +114,9 @@ fun UserLoginScreen(context:Context,viewModel: UserViewModel) {
             )
 
             Button(
-                onClick = { viewModel.validateLogin(userEmail = email, userPassword = password) },
+                onClick = {
+                    viewModel.validateLogin(userEmail = email, userPassword = password)
+                          },
                 enabled = isInputValid,
                 modifier = Modifier.layoutId("loginBtn"),
                 colors = ButtonDefaults.buttonColors(backgroundColor = Color.Blue, contentColor = Color.White)

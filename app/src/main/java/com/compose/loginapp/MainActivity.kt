@@ -39,9 +39,14 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun UserInfoApp(context: Context){
     val navController = rememberNavController()
-    NavHost(navController, startDestination = "userlogin") {
-        composable(route = "userlogin") {
-            InitLogin(context, onNavigateToList = { navController.navigate("userList") })
+    NavHost(navController, startDestination = "userLogin") {
+        composable(route = "userLogin") {
+            InitLogin(context, onNavigateToList = {
+                navController.navigate("userList"){
+                    popUpTo("userLogin")
+                }
+            }
+            )
         }
         composable(route="userList"){
             UserList()
