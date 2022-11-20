@@ -14,14 +14,8 @@ import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.derivedStateOf
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusDirection
@@ -42,14 +36,19 @@ import com.compose.loginapp.ui.widgets.BasicTextField
 import com.jetpack.textfielddemo.ui.widgets.textField.PassWordTextField
 
 @Composable
-fun InitLogin(context: Context,viewModel: UserViewModel = androidx.lifecycle.viewmodel.compose.viewModel()){
+fun InitLogin(context: Context,
+              onNavigateToList: () -> Unit,
+              viewModel: UserViewModel = androidx.lifecycle.viewmodel.compose.viewModel()){
     when (val state = viewModel.loginResponseState.collectAsState().value) {
         is UserViewModel.LoginUiState.Loaded -> {
             UserLoginScreen(context,viewModel)
         }
         is UserViewModel.LoginUiState.Success -> {
-            UserLoginScreen(context,viewModel)
-            Toast.makeText(context,state.message,Toast.LENGTH_LONG).show()
+            //UserLoginScreen(context,viewModel)
+            LaunchedEffect(Unit) {
+                onNavigateToList()
+            }
+           // Toast.makeText(context,state.message,Toast.LENGTH_SHORT).show()
         }
         is UserViewModel.LoginUiState.Error -> {
             UserLoginScreen(context,viewModel)
@@ -71,9 +70,9 @@ fun UserLoginScreen(context:Context,viewModel: UserViewModel) {
         }
     }
 
-    Surface(
+ /*   Surface(
         color = Color.LightGray, modifier = Modifier.fillMaxSize()
-    ) {
+    ) {*/
         ConstraintLayout(
             constraintSet = SetUserLoginConstraints(),
             modifier = Modifier
@@ -127,7 +126,7 @@ fun UserLoginScreen(context:Context,viewModel: UserViewModel) {
             }
 
         }
-    }
+   // }
 }
 
 @Composable
@@ -163,3 +162,6 @@ fun SetUserLoginConstraints():ConstraintSet {
         }
     }
 }
+
+//Screen Flickering in JetPack Compose Navigation
+//https://stackoverflow.com/questions/69487112/why-the-view-keeps-flashing-when-using-jetpack-navigation-with-compose

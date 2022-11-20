@@ -1,5 +1,6 @@
 package com.compose.loginapp
 
+import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -10,9 +11,13 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.compose.loginapp.login.InitLogin
 import com.compose.loginapp.login.UserLoginScreen
 import com.compose.loginapp.ui.theme.LoginAppTheme
+import com.compose.loginapp.users.UserList
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -23,9 +28,23 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(), color = MaterialTheme.colors.background
                 ) {
                    // Greeting("Android")
-                    InitLogin(applicationContext)
+                  //  InitLogin(applicationContext)
+                    UserInfoApp(applicationContext)
                 }
             }
+        }
+    }
+}
+
+@Composable
+fun UserInfoApp(context: Context){
+    val navController = rememberNavController()
+    NavHost(navController, startDestination = "userlogin") {
+        composable(route = "userlogin") {
+            InitLogin(context, onNavigateToList = { navController.navigate("userList") })
+        }
+        composable(route="userList"){
+            UserList()
         }
     }
 }
@@ -38,7 +57,6 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun DefaultPreview() {
     LoginAppTheme {
-        //Greeting("Android")
-      //   UserLoginScreen(applicationContext)
+    //   UserList()
     }
 }
