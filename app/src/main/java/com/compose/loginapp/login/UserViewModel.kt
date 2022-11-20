@@ -32,7 +32,7 @@ class UserViewModel : ViewModel() {
         object Loaded : LoginUiState()
         object InProgress : LoginUiState()
         class Success(val message: String) : LoginUiState()
-        class Error(val message: String) : LoginUiState()
+        class Error(val error: String) : LoginUiState()
 
     }
 }

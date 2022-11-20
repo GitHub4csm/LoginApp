@@ -53,14 +53,13 @@ fun InitLogin(context: Context,viewModel: UserViewModel = androidx.lifecycle.vie
         }
         is UserViewModel.LoginUiState.Error -> {
             UserLoginScreen(context,viewModel)
-            Toast.makeText(context,state.message,Toast.LENGTH_LONG).show()
+            Toast.makeText(context,state.error,Toast.LENGTH_LONG).show()
         }
         else -> {
             UserLoginScreen(context,viewModel)
         }
     }
 }
-
 @Composable
 fun UserLoginScreen(context:Context,viewModel: UserViewModel) {
     var email  by rememberSaveable { mutableStateOf("") }
@@ -139,12 +138,13 @@ fun SetUserLoginConstraints():ConstraintSet {
         val loginPasswordConstraint = createRefFor("userPassword")
         val loginBtnConstraint = createRefFor("loginBtn")
 
-        constrain(loginImageConstraint){
+        constrain(loginImageConstraint) {
             top.linkTo(parent.top)
             start.linkTo(parent.start)
             end.linkTo(parent.end)
             bottom.linkTo(parent.bottom)
         }
+
         constrain(loginUserEmailConstraint){
             top.linkTo(loginImageConstraint.bottom, margin=10.dp)
             start.linkTo(parent.start)
